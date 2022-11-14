@@ -74,7 +74,7 @@ jobs:
       - name: Install Elm Dependencies
         run: |
           npm install -g elm@latest-0.19.1
-          npm install -g elm-test0.19.1-revision9
+          npm install -g elm-test@0.19.1-revision9
 
       - name: All Tests
         run: ./scripts/run_all_tests
