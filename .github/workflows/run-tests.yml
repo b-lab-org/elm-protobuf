@@ -14,25 +14,25 @@ jobs:
     name: Run tests
     strategy:
       matrix:
-        go-version: [ 1.13.x, 1.14.x, 1.15.x, 1.16.x ]
+        go-version: [ 1.14.x, 1.16.x, 1.18.x ]
         platform: [ ubuntu-latest ]
     runs-on: ${{ matrix.platform }}
     env:
       LB_LIBRARY_PATH: ${HOME}/.local/include
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: CI Path
         run: |
           echo "${HOME}/.local/bin" >> $GITHUB_PATH
 
       - name: Install Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: "12"
+          node-version: "16"
 
       - name: Install Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go-version }}
 
@@ -40,7 +40,7 @@ jobs:
         run: ./scripts/install_protobuf
 
       - name: Elm Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.elm
@@ -51,7 +51,7 @@ jobs:
             ${{ runner.os }}-elm-
 
       - name: Go Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/go/pkg/mod
           key: ${{ runner.os }}-${{ matrix.go-version }}-go-${{ hashFiles('**/go.sum') }}
@@ -59,7 +59,7 @@ jobs:
             ${{ runner.os }}-${{ matrix.go-version }}-go-
 
       - name: Protoc Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ env.HOME }}/.local
           key: ${{ runner.os }}-protoc-${{ hashFiles('**/install_protobuf') }}
@@ -74,7 +74,7 @@ jobs:
       - name: Install Elm Dependencies
         run: |
           npm install -g elm@latest-0.19.1
-          npm install -g elm-test
+          npm install -g elm-test0.19.1-revision9
 
       - name: All Tests
         run: ./scripts/run_all_tests
