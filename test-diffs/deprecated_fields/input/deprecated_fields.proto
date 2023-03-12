@@ -6,7 +6,7 @@ message Bar {
     bool field = 1;
     bool deprecatedField = 2 [deprecated=true];
 }
-  
+
 message Foo {
     option deprecated = true;
 
