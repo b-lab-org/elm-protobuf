@@ -251,7 +251,7 @@ uselessDeclarationToPreventErrorDueToEmptyOutputFile = 42
 		SourceFile:        inFile.GetName(),
 		ModuleName:        moduleName(p.ModulePath, inFile),
 		ImportDict:        hasMapEntries(inFile),
-		AdditionalImports: getAdditionalImports(inFile.GetDependency()),
+		AdditionalImports: getAdditionalImports(p.ModulePath, inFile.GetDependency()),
 		TopEnums:          enumsToCustomTypes([]string{}, inFile.GetEnumType(), p),
 		Messages:          messages([]string{}, inFile.GetMessageType(), p),
 	}); err != nil {
@@ -502,7 +502,7 @@ func moduleName(module *string, inFile *descriptorpb.FileDescriptorProto) string
 	return fullModuleName + shortModuleName
 }
 
-func getAdditionalImports(dependencies []string) []string {
+func getAdditionalImports(module *string, dependencies []string) []string {
 	var additions []string
 	for _, d := range dependencies {
 		if excludedFiles[d] {
@@ -514,6 +514,12 @@ func getAdditionalImports(dependencies []string) []string {
 			if segment == "" {
 				continue
 			}
+
+			if module != nil {
+				fullModuleName = fmt.Sprintf("%s.%s", *module, stringextras.FirstUpper(segment))
+				break
+			}
+
 			fullModuleName += stringextras.FirstUpper(segment) + "."
 		}
 
