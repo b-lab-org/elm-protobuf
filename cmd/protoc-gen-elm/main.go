@@ -32,6 +32,7 @@ type parameters struct {
 	Version          bool
 	Debug            bool
 	RemoveDeprecated bool
+	ModulePath       *string
 }
 
 func parseParameters(input *string) (parameters, error) {
@@ -43,13 +44,20 @@ func parseParameters(input *string) (parameters, error) {
 	}
 
 	for _, i := range strings.Split(*input, ",") {
-		switch i {
+		parts := strings.Split(i, "=")
+		switch parts[0] {
 		case "remove-deprecated":
 			result.RemoveDeprecated = true
+		case "module-path":
+			if len(parts) != 2 {
+				return parameters{}, errors.New("module argument requires a value, module=value")
+			}
+
+			result.ModulePath = proto.String(parts[1])
 		case "debug":
 			result.Debug = true
 		default:
-			err = fmt.Errorf("unknown parameter: \"%s\"", i)
+			return parameters{}, fmt.Errorf("unknown parameter: \"%s\"", i)
 		}
 	}
 
@@ -241,7 +249,7 @@ uselessDeclarationToPreventErrorDueToEmptyOutputFile = 42
 		Messages          []pbMessage
 	}{
 		SourceFile:        inFile.GetName(),
-		ModuleName:        moduleName(inFile.GetName()),
+		ModuleName:        moduleName(p.ModulePath, inFile),
 		ImportDict:        hasMapEntries(inFile),
 		AdditionalImports: getAdditionalImports(inFile.GetDependency()),
 		TopEnums:          enumsToCustomTypes([]string{}, inFile.GetEnumType(), p),
@@ -472,11 +480,15 @@ func fileName(inFilePath string) string {
 	return fullFileName + shortFileName + ".elm"
 }
 
-func moduleName(inFilePath string) string {
-	inFileDir, inFileName := filepath.Split(inFilePath)
+func moduleName(module *string, inFile *descriptorpb.FileDescriptorProto) string {
+	inFileDir, inFileName := filepath.Split(inFile.GetName())
 
 	trimmed := strings.TrimSuffix(inFileName, ".proto")
 	shortModuleName := stringextras.FirstUpper(trimmed)
+
+	if module != nil {
+		return fmt.Sprintf("%s.%s", *module, shortModuleName)
+	}
 
 	fullModuleName := ""
 	for _, segment := range strings.Split(inFileDir, "/") {
