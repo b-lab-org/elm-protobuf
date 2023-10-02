@@ -337,7 +337,7 @@ func oneOfsToCustomTypes(preface []string, messagePb *descriptorpb.DescriptorPro
 			}
 
 			variants = append(variants, elm.OneOfVariant{
-				Name:     elm.NestedVariantName(inField.GetName(), preface),
+				Name:     elm.NestedVariantName(inField.GetName(), []string{}),
 				JSONName: elm.OneOfVariantJSONName(inField),
 				Type:     elm.BasicFieldType(inField),
 				Decoder:  elm.BasicFieldDecoder(inField),
@@ -410,16 +410,16 @@ func messages(preface []string, messagePbs []*descriptorpb.DescriptorProto, p pa
 			}
 		}
 
+		newPreface := append([]string{messagePb.GetName()}, preface...)
 		for _, oneOfPb := range messagePb.GetOneofDecl() {
 			newFields = append(newFields, elm.TypeAliasField{
 				Name:    elm.FieldName(oneOfPb.GetName()),
-				Type:    elm.OneOfType(oneOfPb.GetName()),
-				Encoder: elm.OneOfEncoder(oneOfPb),
-				Decoder: elm.OneOfDecoder(oneOfPb),
+				Type:    elm.OneOfType(newPreface, oneOfPb.GetName()),
+				Encoder: elm.OneOfEncoder(newPreface, oneOfPb),
+				Decoder: elm.OneOfDecoder(newPreface, oneOfPb),
 			})
 		}
 
-		newPreface := append([]string{messagePb.GetName()}, preface...)
 		name := elm.NestedType(messagePb.GetName(), preface)
 		result = append(result, pbMessage{
 			TypeAlias: elm.TypeAlias{

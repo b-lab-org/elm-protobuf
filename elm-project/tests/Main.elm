@@ -79,7 +79,7 @@ suite =
 
 fuzz : Fuzzer a -> String -> (a -> Expectation) -> Test
 fuzz =
-    fuzzWith { runs = 2000 }
+    fuzzWith { runs = 2000, distribution = noDistribution }
 
 
 encode : (a -> JE.Value) -> a -> String
@@ -139,7 +139,7 @@ fooDefault =
     , colours = []
     , singleIntField = 0
     , repeatedIntField = []
-    , oo = T.OoUnspecified
+    , oo = T.Unspecified
     , bytesField = []
     , stringValueField = Nothing
     , otherField = Nothing
@@ -151,7 +151,7 @@ fooDefault =
 recDefault : R.Rec
 recDefault =
     { int32Field = 0
-    , r = R.RUnspecified
+    , r = R.Unspecified
     , stringField = ""
     }
 
@@ -321,7 +321,7 @@ rec1 =
     , r =
         R.RecField
             { int32Field = 0
-            , r = R.RUnspecified
+            , r = R.Unspecified
             , stringField = ""
             }
     , stringField = ""
@@ -348,7 +348,7 @@ rec2 =
             , r =
                 R.RecField
                     { int32Field = 0
-                    , r = R.RUnspecified
+                    , r = R.Unspecified
                     , stringField = ""
                     }
             , stringField = ""

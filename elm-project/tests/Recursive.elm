@@ -17,7 +17,7 @@ uselessDeclarationToPreventErrorDueToEmptyOutputFile = 42
 type alias Rec =
     { int32Field : Int -- 1
     , stringField : String -- 4
-    , r : R
+    , r : Rec_R
     }
 
 
@@ -26,7 +26,7 @@ recDecoder =
     JD.lazy <| \_ -> decode Rec
         |> required "int32Field" intDecoder 0
         |> required "stringField" JD.string ""
-        |> field rDecoder
+        |> field rec_RDecoder
 
 
 recEncoder : Rec -> JE.Value
@@ -34,27 +34,27 @@ recEncoder v =
     JE.object <| List.filterMap identity <|
         [ (requiredFieldEncoder "int32Field" JE.int 0 v.int32Field)
         , (requiredFieldEncoder "stringField" JE.string "" v.stringField)
-        , (rEncoder v.r)
+        , (rec_REncoder v.r)
         ]
 
 
-type R
-    = RUnspecified
+type Rec_R
+    = Unspecified
     | RecField Rec
 
 
-rDecoder : JD.Decoder R
-rDecoder =
+rec_RDecoder : JD.Decoder Rec_R
+rec_RDecoder =
     JD.lazy <| \_ -> JD.oneOf
         [ JD.map RecField (JD.field "recField" recDecoder)
-        , JD.succeed RUnspecified
+        , JD.succeed Unspecified
         ]
 
 
-rEncoder : R -> Maybe ( String, JE.Value )
-rEncoder v =
+rec_REncoder : Rec_R -> Maybe ( String, JE.Value )
+rec_REncoder v =
     case v of
-        RUnspecified ->
+        Unspecified ->
             Nothing
 
         RecField x ->
