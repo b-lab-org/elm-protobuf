@@ -428,7 +428,7 @@ func messages(preface []string, messagePbs []*descriptorpb.DescriptorProto, p pa
 				Encoder: elm.EncoderName(name),
 				Fields:  newFields,
 			},
-			OneOfCustomTypes: oneOfsToCustomTypes([]string{}, messagePb, p),
+			OneOfCustomTypes: oneOfsToCustomTypes(newPreface, messagePb, p),
 			EnumCustomTypes:  enumsToCustomTypes(newPreface, messagePb.GetEnumType(), p),
 			NestedMessages:   messages(newPreface, messagePb.GetNestedType(), p),
 		})
