@@ -118,7 +118,7 @@ type alias Foo =
     , otherField : Maybe Other -- 11
     , otherDirField : Maybe OtherDir -- 12
     , timestampField : Maybe Timestamp -- 13
-    , oo : Oo
+    , oo : Foo_Oo
     }
 
 
@@ -136,7 +136,7 @@ fooDecoder =
         |> optional "otherField" otherDecoder
         |> optional "otherDirField" otherDirDecoder
         |> optional "timestampField" timestampDecoder
-        |> field ooDecoder
+        |> field foo_OoDecoder
 
 
 fooEncoder : Foo -> JE.Value
@@ -153,29 +153,29 @@ fooEncoder v =
         , (optionalEncoder "otherField" otherEncoder v.otherField)
         , (optionalEncoder "otherDirField" otherDirEncoder v.otherDirField)
         , (optionalEncoder "timestampField" timestampEncoder v.timestampField)
-        , (ooEncoder v.oo)
+        , (foo_OoEncoder v.oo)
         ]
 
 
-type Oo
-    = OoUnspecified
+type Foo_Oo
+    = Foo_OoUnspecified
     | Oo1 Int
     | Oo2 Bool
 
 
-ooDecoder : JD.Decoder Oo
-ooDecoder =
+foo_OoDecoder : JD.Decoder Foo_Oo
+foo_OoDecoder =
     JD.lazy <| \_ -> JD.oneOf
         [ JD.map Oo1 (JD.field "oo1" intDecoder)
         , JD.map Oo2 (JD.field "oo2" JD.bool)
-        , JD.succeed OoUnspecified
+        , JD.succeed Foo_OoUnspecified
         ]
 
 
-ooEncoder : Oo -> Maybe ( String, JE.Value )
-ooEncoder v =
+foo_OoEncoder : Foo_Oo -> Maybe ( String, JE.Value )
+foo_OoEncoder v =
     case v of
-        OoUnspecified ->
+        Foo_OoUnspecified ->
             Nothing
 
         Oo1 x ->

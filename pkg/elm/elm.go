@@ -99,7 +99,7 @@ func BasicFieldEncoder(inField *descriptorpb.FieldDescriptorProto) VariableName 
 	case descriptorpb.FieldDescriptorProto_TYPE_BYTES:
 		return "bytesFieldEncoder"
 	default:
-		panic(fmt.Errorf("Error generating decoder for field %s", inField.GetType()))
+		panic(fmt.Errorf("error generating decoder for field %s", inField.GetType()))
 	}
 }
 
@@ -166,7 +166,7 @@ func BasicFieldType(inField *descriptorpb.FieldDescriptorProto) Type {
 		}
 		return ExternalType(inField.GetTypeName())
 	default:
-		panic(fmt.Errorf("Error generating type for field %q %s", inField.GetName(), inField.GetType()))
+		panic(fmt.Errorf("error generating type for field %q %s", inField.GetName(), inField.GetType()))
 	}
 }
 

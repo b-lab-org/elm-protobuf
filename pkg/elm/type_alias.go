@@ -150,18 +150,25 @@ func RequiredFieldDecoder(pb *descriptorpb.FieldDescriptorProto) FieldDecoder {
 	))
 }
 
-func OneOfEncoder(pb *descriptorpb.OneofDescriptorProto) FieldEncoder {
+func OneOfEncoder(preface []string, pb *descriptorpb.OneofDescriptorProto) FieldEncoder {
+	fullName := stringextras.CamelCase(pb.GetName())
+	for _, p := range preface {
+		fullName = fmt.Sprintf("%s_%s", p, fullName)
+	}
+
 	return FieldEncoder(fmt.Sprintf("%s v.%s",
-		EncoderName(Type(stringextras.CamelCase(pb.GetName()))),
+		EncoderName(Type(fullName)),
 		FieldName(pb.GetName()),
 	))
 }
 
-func OneOfDecoder(pb *descriptorpb.OneofDescriptorProto) FieldDecoder {
-	return FieldDecoder(fmt.Sprintf(
-		"field %s",
-		DecoderName(Type(stringextras.CamelCase(pb.GetName()))),
-	))
+func OneOfDecoder(preface []string, pb *descriptorpb.OneofDescriptorProto) FieldDecoder {
+	fullName := stringextras.CamelCase(pb.GetName())
+	for _, p := range preface {
+		fullName = fmt.Sprintf("%s_%s", p, fullName)
+	}
+
+	return FieldDecoder(fmt.Sprintf("field %s", DecoderName(Type(fullName))))
 }
 
 func MapType(messagePb *descriptorpb.DescriptorProto) Type {
@@ -244,8 +251,13 @@ func ListDecoder(pb *descriptorpb.FieldDescriptorProto) FieldDecoder {
 	))
 }
 
-func OneOfType(in string) Type {
-	return Type(appendUnderscoreToReservedKeywords(stringextras.UpperCamelCase(in)))
+func OneOfType(preface []string, in string) Type {
+	fullName := stringextras.UpperCamelCase(in)
+	for _, p := range preface {
+		fullName = fmt.Sprintf("%s_%s", stringextras.UpperCamelCase(p), fullName)
+	}
+
+	return Type(appendUnderscoreToReservedKeywords(fullName))
 }
 
 // TypeAliasTemplate - defines templates for self contained type aliases
