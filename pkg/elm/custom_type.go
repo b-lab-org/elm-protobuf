@@ -126,7 +126,7 @@ func OneOfCustomTypeTemplate(t *template.Template) (*template.Template, error) {
 	return t.Parse(`
 {{- define "oneof-custom-type" -}}
 type {{ .Name }}
-    = Unspecified
+    = {{ .Name }}Unspecified
 {{- range .Variants }}
     | {{ .Name }} {{ .Type }}
 {{- end }}
@@ -136,14 +136,14 @@ type {{ .Name }}
 {{ .Decoder }} =
     JD.lazy <| \_ -> JD.oneOf
         [{{ range $i, $v := .Variants }}{{ if $i }},{{ end }} JD.map {{ .Name }} (JD.field "{{ .JSONName }}" {{ .Decoder }})
-        {{ end }}, JD.succeed Unspecified
+        {{ end }}, JD.succeed {{ .Name }}Unspecified
         ]
 
 
 {{ .Encoder }} : {{ .Name }} -> Maybe ( String, JE.Value )
 {{ .Encoder }} v =
     case v of
-        Unspecified ->
+        {{ .Name }}Unspecified ->
             Nothing
         {{- range .Variants }}
 

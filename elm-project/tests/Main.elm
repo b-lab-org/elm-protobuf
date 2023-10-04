@@ -139,7 +139,7 @@ fooDefault =
     , colours = []
     , singleIntField = 0
     , repeatedIntField = []
-    , oo = T.Unspecified
+    , oo = T.Foo_OoUnspecified
     , bytesField = []
     , stringValueField = Nothing
     , otherField = Nothing
@@ -151,7 +151,7 @@ fooDefault =
 recDefault : R.Rec
 recDefault =
     { int32Field = 0
-    , r = R.Unspecified
+    , r = R.Rec_RUnspecified
     , stringField = ""
     }
 
@@ -321,7 +321,7 @@ rec1 =
     , r =
         R.RecField
             { int32Field = 0
-            , r = R.Unspecified
+            , r = R.Rec_RUnspecified
             , stringField = ""
             }
     , stringField = ""
@@ -348,7 +348,7 @@ rec2 =
             , r =
                 R.RecField
                     { int32Field = 0
-                    , r = R.Unspecified
+                    , r = R.Rec_RUnspecified
                     , stringField = ""
                     }
             , stringField = ""

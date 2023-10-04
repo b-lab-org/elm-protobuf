@@ -158,7 +158,7 @@ fooEncoder v =
 
 
 type Foo_Oo
-    = Unspecified
+    = Foo_OoUnspecified
     | Oo1 Int
     | Oo2 Bool
 
@@ -168,14 +168,14 @@ foo_OoDecoder =
     JD.lazy <| \_ -> JD.oneOf
         [ JD.map Oo1 (JD.field "oo1" intDecoder)
         , JD.map Oo2 (JD.field "oo2" JD.bool)
-        , JD.succeed Unspecified
+        , JD.succeed Foo_OoUnspecified
         ]
 
 
 foo_OoEncoder : Foo_Oo -> Maybe ( String, JE.Value )
 foo_OoEncoder v =
     case v of
-        Unspecified ->
+        Foo_OoUnspecified ->
             Nothing
 
         Oo1 x ->

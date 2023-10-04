@@ -39,7 +39,7 @@ recEncoder v =
 
 
 type Rec_R
-    = Unspecified
+    = Rec_RUnspecified
     | RecField Rec
 
 
@@ -47,14 +47,14 @@ rec_RDecoder : JD.Decoder Rec_R
 rec_RDecoder =
     JD.lazy <| \_ -> JD.oneOf
         [ JD.map RecField (JD.field "recField" recDecoder)
-        , JD.succeed Unspecified
+        , JD.succeed Rec_RUnspecified
         ]
 
 
 rec_REncoder : Rec_R -> Maybe ( String, JE.Value )
 rec_REncoder v =
     case v of
-        Unspecified ->
+        Rec_RUnspecified ->
             Nothing
 
         RecField x ->

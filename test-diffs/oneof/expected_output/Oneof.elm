@@ -36,7 +36,7 @@ fooEncoder v =
 
 
 type Foo_FirstOneof
-    = Unspecified
+    = Foo_FirstOneofUnspecified
     | StringField String
     | IntField Int
 
@@ -46,14 +46,14 @@ foo_FirstOneofDecoder =
     JD.lazy <| \_ -> JD.oneOf
         [ JD.map StringField (JD.field "stringField" JD.string)
         , JD.map IntField (JD.field "intField" intDecoder)
-        , JD.succeed Unspecified
+        , JD.succeed Foo_FirstOneofUnspecified
         ]
 
 
 foo_FirstOneofEncoder : Foo_FirstOneof -> Maybe ( String, JE.Value )
 foo_FirstOneofEncoder v =
     case v of
-        Unspecified ->
+        Foo_FirstOneofUnspecified ->
             Nothing
 
         StringField x ->
@@ -64,7 +64,7 @@ foo_FirstOneofEncoder v =
 
 
 type Foo_SecondOneof
-    = Unspecified
+    = Foo_SecondOneofUnspecified
     | BoolField Bool
     | OtherStringField String
 
@@ -74,14 +74,14 @@ foo_SecondOneofDecoder =
     JD.lazy <| \_ -> JD.oneOf
         [ JD.map BoolField (JD.field "boolField" JD.bool)
         , JD.map OtherStringField (JD.field "otherStringField" JD.string)
-        , JD.succeed Unspecified
+        , JD.succeed Foo_SecondOneofUnspecified
         ]
 
 
 foo_SecondOneofEncoder : Foo_SecondOneof -> Maybe ( String, JE.Value )
 foo_SecondOneofEncoder v =
     case v of
-        Unspecified ->
+        Foo_SecondOneofUnspecified ->
             Nothing
 
         BoolField x ->
@@ -110,7 +110,7 @@ foo2Encoder v =
 
 
 type Foo2_FirstOneof
-    = Unspecified
+    = Foo2_FirstOneofUnspecified
     | StringField String
     | IntField Int
 
@@ -120,14 +120,14 @@ foo2_FirstOneofDecoder =
     JD.lazy <| \_ -> JD.oneOf
         [ JD.map StringField (JD.field "stringField" JD.string)
         , JD.map IntField (JD.field "intField" intDecoder)
-        , JD.succeed Unspecified
+        , JD.succeed Foo2_FirstOneofUnspecified
         ]
 
 
 foo2_FirstOneofEncoder : Foo2_FirstOneof -> Maybe ( String, JE.Value )
 foo2_FirstOneofEncoder v =
     case v of
-        Unspecified ->
+        Foo2_FirstOneofUnspecified ->
             Nothing
 
         StringField x ->
