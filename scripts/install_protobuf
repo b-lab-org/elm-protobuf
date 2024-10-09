@@ -6,7 +6,7 @@ set -x
 #git clone https://github.com/google/protobuf.git
 #cd protobuf && ./autogen.sh && ./configure && make && sudo make install
 
-readonly VERSION='28.2.0'
+readonly VERSION='28.2'
 
 readonly TEMP_DIR="$(mktemp)"
 readonly TEMP_UNZIP_DIR="${TEMP_DIR}/protoc"
@@ -22,7 +22,7 @@ if protoc --version 2> /dev/null | grep -q "${VERSION}"; then
     exit
 fi
 
-wget -q -P "${TEMP_DIR}" https://github.com/google/protobuf/releases/download/v${VERSION}/protoc-${VERSION}-linux-x86_64.zip
+wget -q -P "${TEMP_DIR}" https://github.com/protocolbuffers/protobuf/releases/download/v${VERSION}/protoc-${VERSION}-linux-x86_64.zip
 mkdir -p "${LOCAL}/bin"
 mkdir -p "${LOCAL}/include"
 unzip -o "${TEMP_DIR}/protoc-${VERSION}-linux-x86_64.zip" -d "${LOCAL}" bin/protoc
